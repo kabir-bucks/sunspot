@@ -1,0 +1,600 @@
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: var(--font-sans); background: transparent; }
+
+.phone-shell {
+  width: 340px;
+  margin: 1rem auto;
+  background: #0A0A0F;
+  border-radius: 44px;
+  padding: 14px;
+  border: 1px solid #2a2a35;
+}
+.phone-notch {
+  width: 100px; height: 28px;
+  background: #0A0A0F;
+  border-radius: 0 0 18px 18px;
+  margin: 0 auto 0;
+  position: relative; z-index: 2;
+}
+.phone-screen {
+  background: #0D0D14;
+  border-radius: 32px;
+  overflow: hidden;
+  min-height: 680px;
+  position: relative;
+}
+.status-bar {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 10px 20px 6px;
+  font-size: 11px; font-weight: 500; color: #fff;
+  letter-spacing: 0.02em;
+}
+.status-icons { display: flex; gap: 5px; align-items: center; }
+.signal-bar { width: 3px; border-radius: 1px; background: #fff; }
+
+.screen { display: none; padding: 0 16px 24px; }
+.screen.active { display: block; }
+
+.app-header {
+  padding: 8px 0 16px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.app-logo { display: flex; align-items: center; gap: 8px; }
+.logo-icon {
+  width: 34px; height: 34px; border-radius: 10px;
+  background: #F59E0B;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 17px;
+}
+.logo-text { font-size: 18px; font-weight: 500; color: #fff; letter-spacing: -0.3px; }
+.logo-sub { font-size: 10px; color: #666; letter-spacing: 0.04em; text-transform: uppercase; }
+.settings-btn {
+  width: 32px; height: 32px; border-radius: 50%;
+  background: #1A1A24; border: 0.5px solid #2a2a35;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; color: #888; font-size: 15px;
+}
+
+.mode-toggle {
+  display: flex; gap: 0;
+  background: #1A1A24; border-radius: 14px; padding: 3px;
+  margin-bottom: 18px;
+}
+.mode-btn {
+  flex: 1; padding: 8px 0; border: none; border-radius: 11px;
+  font-size: 12px; font-weight: 500; cursor: pointer;
+  background: transparent; color: #666;
+  display: flex; align-items: center; justify-content: center; gap: 5px;
+  transition: all 0.2s;
+}
+.mode-btn.active { background: #fff; color: #0D0D14; }
+.mode-btn i { font-size: 13px; }
+
+.section-title { font-size: 11px; font-weight: 500; color: #444; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 10px; }
+
+.sport-row { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 8px; margin-bottom: 16px; }
+.sport-chip {
+  background: #1A1A24; border: 0.5px solid #2a2a35;
+  border-radius: 12px; padding: 12px 10px;
+  font-size: 12px; color: #888; cursor: pointer;
+  display: flex; align-items: center; gap: 7px;
+  transition: all 0.15s;
+}
+.sport-chip.active { background: #1C2A14; border-color: #4A7C2F; color: #A3D96A; }
+.sport-chip i { font-size: 16px; }
+.sport-chip span { font-weight: 500; }
+
+.input-group { margin-bottom: 12px; }
+.input-label { font-size: 11px; color: #555; margin-bottom: 5px; letter-spacing: 0.04em; }
+.dark-input {
+  width: 100%; background: #1A1A24; border: 0.5px solid #2a2a35;
+  border-radius: 10px; padding: 11px 13px;
+  font-size: 13px; color: #fff; font-family: var(--font-sans);
+  outline: none; appearance: none; -webkit-appearance: none;
+}
+.dark-input:focus { border-color: #F59E0B; }
+.dark-input::placeholder { color: #444; }
+.input-row { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 8px; }
+
+.compass-card {
+  background: #1A1A24; border: 0.5px solid #2a2a35;
+  border-radius: 12px; padding: 13px; margin-bottom: 16px;
+  display: flex; align-items: center; gap: 12px; cursor: pointer;
+}
+.compass-card.detected { border-color: #4A7C2F; background: #1C2A14; }
+.compass-icon {
+  width: 38px; height: 38px; border-radius: 10px;
+  background: #0D0D14; display: flex; align-items: center; justify-content: center;
+  font-size: 18px; color: #F59E0B; flex-shrink: 0;
+}
+.compass-text { flex: 1; }
+.compass-title { font-size: 13px; font-weight: 500; color: #ccc; }
+.compass-sub { font-size: 11px; color: #555; margin-top: 2px; }
+.compass-arrow { color: #444; font-size: 14px; }
+
+.cta-btn {
+  width: 100%; padding: 14px; border: none; border-radius: 14px;
+  background: #F59E0B; color: #0A0A0F;
+  font-size: 14px; font-weight: 500; cursor: pointer;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  letter-spacing: -0.2px; margin-top: 4px;
+}
+.cta-btn i { font-size: 16px; }
+
+.result-screen { padding: 0; }
+
+.ar-preview {
+  width: 100%; height: 260px;
+  background: #080810; border-radius: 20px;
+  position: relative; overflow: hidden; margin-bottom: 16px;
+}
+.ar-field-bg {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+}
+.ar-overlay-bar {
+  position: absolute; top: 14px; left: 14px; right: 14px;
+  background: rgba(74,124,47,0.88); border-radius: 10px;
+  padding: 10px 14px; display: flex; align-items: center; gap: 8px;
+}
+.ar-bar-dot { width: 8px; height: 8px; border-radius: 50%; background: #A3D96A; flex-shrink: 0; }
+.ar-bar-text { font-size: 12px; font-weight: 500; color: #fff; }
+.ar-zone-pills {
+  position: absolute; bottom: 14px; left: 14px; right: 14px;
+  display: flex; flex-direction: column; gap: 5px;
+}
+.ar-pill {
+  border-radius: 8px; padding: 7px 12px;
+  font-size: 11px; font-weight: 500; color: #fff;
+  display: flex; align-items: center; gap: 7px;
+}
+.ar-compass-rose {
+  position: absolute; top: 14px; right: 14px;
+  width: 52px; height: 52px; border-radius: 50%;
+  background: rgba(13,13,20,0.75); border: 0.5px solid #333;
+  display: flex; align-items: center; justify-content: center;
+}
+.ar-camera-btn {
+  position: absolute; bottom: 14px; right: 14px;
+  width: 42px; height: 42px; border-radius: 50%;
+  background: #F59E0B; border: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; color: #0A0A0F;
+}
+
+.result-header { padding: 0 16px; margin-bottom: 14px; }
+.result-label { font-size: 11px; color: #444; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px; }
+.result-title { font-size: 20px; font-weight: 500; color: #fff; letter-spacing: -0.4px; }
+.result-sub { font-size: 13px; color: #666; margin-top: 3px; }
+
+.zone-cards { padding: 0 16px; display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
+.zone-card {
+  background: #1A1A24; border: 0.5px solid #2a2a35;
+  border-radius: 12px; padding: 13px 14px;
+  display: flex; align-items: center; gap: 12px;
+}
+.zone-card.best { background: #1C2A14; border-color: #4A7C2F; }
+.zone-card.bad { background: #200F0F; border-color: #5A1F1F; }
+.zone-indicator {
+  width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0;
+}
+.zone-name { font-size: 13px; font-weight: 500; color: #ccc; flex: 1; }
+.zone-desc { font-size: 11px; color: #555; margin-top: 2px; }
+.zone-badge {
+  font-size: 10px; font-weight: 500; padding: 3px 8px; border-radius: 6px;
+}
+
+.field-map {
+  margin: 0 16px 16px; background: #1A1A24; border: 0.5px solid #2a2a35;
+  border-radius: 16px; padding: 14px;
+}
+.field-map-label { font-size: 11px; color: #444; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 10px; }
+
+.bottom-nav {
+  display: flex; background: #0D0D14;
+  border-top: 0.5px solid #1e1e28; padding: 10px 0 16px;
+}
+.nav-item {
+  flex: 1; display: flex; flex-direction: column; align-items: center;
+  gap: 3px; cursor: pointer;
+  font-size: 10px; color: #444; font-weight: 500;
+}
+.nav-item.active { color: #F59E0B; }
+.nav-item i { font-size: 20px; }
+
+.screen-wrapper { min-height: 580px; display: flex; flex-direction: column; }
+.screen-content { flex: 1; padding: 0 16px 16px; overflow: hidden; }
+</style>
+
+<h2 class="sr-only">SunSpot app mockup — polished dark-mode mobile UI showing plan-ahead and live AR screens</h2>
+
+<div class="phone-shell">
+  <div class="phone-screen">
+    <div class="status-bar">
+      <span>9:41</span>
+      <div class="status-icons">
+        <div style="display:flex;gap:2px;align-items:flex-end;">
+          <div class="signal-bar" style="height:4px;"></div>
+          <div class="signal-bar" style="height:6px;"></div>
+          <div class="signal-bar" style="height:8px;"></div>
+          <div class="signal-bar" style="height:10px;"></div>
+        </div>
+        <i class="ti ti-wifi" style="font-size:13px;color:#fff;" aria-hidden="true"></i>
+        <i class="ti ti-battery-2" style="font-size:15px;color:#fff;" aria-hidden="true"></i>
+      </div>
+    </div>
+
+    <div class="screen-wrapper">
+      <div class="screen-content">
+        <div class="app-header">
+          <div class="app-logo">
+            <div class="logo-icon">☀</div>
+            <div>
+              <div class="logo-text">SunSpot</div>
+              <div class="logo-sub">Find your best seat</div>
+            </div>
+          </div>
+          <div class="settings-btn" onclick="showScreen('settings')">
+            <i class="ti ti-settings" aria-hidden="true"></i>
+          </div>
+        </div>
+
+        <div id="screen-home" class="screen active">
+          <div class="mode-toggle">
+            <button class="mode-btn active" onclick="toggleMode(this,'plan')">
+              <i class="ti ti-calendar" aria-hidden="true"></i> Plan ahead
+            </button>
+            <button class="mode-btn" onclick="toggleMode(this,'ar')">
+              <i class="ti ti-camera" aria-hidden="true"></i> Live AR
+            </button>
+          </div>
+
+          <div id="plan-view">
+            <div class="section-title">Sport</div>
+            <div class="sport-row">
+              <div class="sport-chip active" onclick="pickSport(this)">
+                <i class="ti ti-ball-football" aria-hidden="true"></i><span>Soccer</span>
+              </div>
+              <div class="sport-chip" onclick="pickSport(this)">
+                <i class="ti ti-circle" aria-hidden="true"></i><span>Baseball</span>
+              </div>
+              <div class="sport-chip" onclick="pickSport(this)">
+                <i class="ti ti-run" aria-hidden="true"></i><span>Football</span>
+              </div>
+              <div class="sport-chip" onclick="pickSport(this)">
+                <i class="ti ti-award" aria-hidden="true"></i><span>Lacrosse</span>
+              </div>
+            </div>
+
+            <div class="section-title">Game time</div>
+            <div class="input-row" style="margin-bottom:12px;">
+              <div class="input-group" style="margin:0;">
+                <div class="input-label">Date</div>
+                <input class="dark-input" type="date" id="p-date" />
+              </div>
+              <div class="input-group" style="margin:0;">
+                <div class="input-label">Kickoff</div>
+                <input class="dark-input" type="time" id="p-time" value="10:00" />
+              </div>
+            </div>
+
+            <div class="section-title">Field orientation</div>
+            <div class="compass-card" id="compass-card" onclick="fakeCompass()">
+              <div class="compass-icon"><i class="ti ti-compass" aria-hidden="true"></i></div>
+              <div class="compass-text">
+                <div class="compass-title" id="compass-title">Tap to detect field direction</div>
+                <div class="compass-sub" id="compass-sub">Point phone at the goal / end zone</div>
+              </div>
+              <i class="ti ti-chevron-right compass-arrow" aria-hidden="true"></i>
+            </div>
+
+            <button class="cta-btn" onclick="showScreen('result')">
+              Find best seats <i class="ti ti-arrow-right" aria-hidden="true"></i>
+            </button>
+          </div>
+
+          <div id="ar-view" style="display:none;">
+            <div style="background:#1A1A24;border:0.5px solid #2a2a35;border-radius:14px;padding:14px;margin-bottom:14px;">
+              <div class="section-title" style="margin-bottom:8px;">Sport</div>
+              <div class="sport-row" style="margin-bottom:0;">
+                <div class="sport-chip active" onclick="pickSport(this)">
+                  <i class="ti ti-ball-football" aria-hidden="true"></i><span>Soccer</span>
+                </div>
+                <div class="sport-chip" onclick="pickSport(this)">
+                  <i class="ti ti-circle" aria-hidden="true"></i><span>Baseball</span>
+                </div>
+                <div class="sport-chip" onclick="pickSport(this)">
+                  <i class="ti ti-run" aria-hidden="true"></i><span>Football</span>
+                </div>
+                <div class="sport-chip" onclick="pickSport(this)">
+                  <i class="ti ti-award" aria-hidden="true"></i><span>Lacrosse</span>
+                </div>
+              </div>
+            </div>
+            <button class="cta-btn" onclick="showScreen('ar')">
+              <i class="ti ti-camera" aria-hidden="true"></i> Open live camera
+            </button>
+            <div style="font-size:11px;color:#444;text-align:center;margin-top:10px;line-height:1.6;">
+              Points your camera at the field — overlays best seats in real time using your GPS + compass.
+            </div>
+          </div>
+        </div>
+
+        <div id="screen-result" class="screen">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
+            <button onclick="showScreen('home')" style="background:#1A1A24;border:0.5px solid #2a2a35;border-radius:10px;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#888;font-size:15px;"><i class="ti ti-arrow-left" aria-hidden="true"></i></button>
+            <div style="font-size:16px;font-weight:500;color:#fff;">Your results</div>
+          </div>
+
+          <div style="background:#1C2A14;border:0.5px solid #4A7C2F;border-radius:16px;padding:16px;margin-bottom:14px;">
+            <div style="font-size:11px;color:#5A8A3A;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px;">Best seat</div>
+            <div style="font-size:22px;font-weight:500;color:#A3D96A;letter-spacing:-0.4px;">North sideline</div>
+            <div style="font-size:13px;color:#5A8A3A;margin-top:3px;">Minimal glare — sun is behind you</div>
+          </div>
+
+          <canvas id="result-canvas" style="width:100%;border-radius:14px;margin-bottom:14px;" height="160"></canvas>
+
+          <div class="section-title">All zones</div>
+          <div class="zone-cards" style="padding:0;">
+            <div class="zone-card best">
+              <div class="zone-indicator" style="background:#4A7C2F;"></div>
+              <div style="flex:1;"><div class="zone-name">North sideline</div><div class="zone-desc">Minimal glare</div></div>
+              <div class="zone-badge" style="background:#1C2A14;color:#A3D96A;border:0.5px solid #4A7C2F;">Best</div>
+            </div>
+            <div class="zone-card">
+              <div class="zone-indicator" style="background:#92400E;"></div>
+              <div style="flex:1;"><div class="zone-name">West end zone</div><div class="zone-desc">Partial glare</div></div>
+              <div class="zone-badge" style="background:#2A1F0A;color:#D97706;border:0.5px solid #78350F;">Okay</div>
+            </div>
+            <div class="zone-card">
+              <div class="zone-indicator" style="background:#5A1F1F;"></div>
+              <div style="flex:1;"><div class="zone-name">South sideline</div><div class="zone-desc">Sun at an angle</div></div>
+              <div class="zone-badge" style="background:#200F0F;color:#F87171;border:0.5px solid #5A1F1F;">Poor</div>
+            </div>
+            <div class="zone-card bad">
+              <div class="zone-indicator" style="background:#7F1D1D;"></div>
+              <div style="flex:1;"><div class="zone-name">East end zone</div><div class="zone-desc">Sun in your face</div></div>
+              <div class="zone-badge" style="background:#200F0F;color:#F87171;border:0.5px solid #7F1D1D;">Avoid</div>
+            </div>
+          </div>
+
+          <div style="background:#1A1A24;border:0.5px solid #2a2a35;border-radius:12px;padding:12px 14px;margin-top:14px;">
+            <div style="font-size:11px;color:#444;line-height:1.7;">
+              Sun position at game time: 142° azimuth, 38° above horizon. Field heading: 90°. Calculated for your current location.
+            </div>
+          </div>
+        </div>
+
+        <div id="screen-ar" class="screen" style="padding:0 0 16px;">
+          <div style="padding:0 16px;display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+            <button onclick="showScreen('home')" style="background:#1A1A24;border:0.5px solid #2a2a35;border-radius:10px;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#888;font-size:15px;"><i class="ti ti-arrow-left" aria-hidden="true"></i></button>
+            <div style="font-size:16px;font-weight:500;color:#fff;">Live AR mode</div>
+          </div>
+
+          <div class="ar-preview" style="border-radius:0;margin-bottom:0;height:300px;">
+            <canvas id="ar-canvas" style="position:absolute;inset:0;width:100%;height:100%;"></canvas>
+            <div class="ar-overlay-bar">
+              <div class="ar-bar-dot"></div>
+              <div class="ar-bar-text">Great view — minimal glare where you're facing</div>
+            </div>
+            <div class="ar-compass-rose">
+              <canvas id="rose-canvas" width="52" height="52"></canvas>
+            </div>
+            <div class="ar-zone-pills">
+              <div class="ar-pill" style="background:rgba(74,124,47,0.85);">
+                <i class="ti ti-star" style="font-size:12px;" aria-hidden="true"></i> North sideline — best seat
+              </div>
+              <div class="ar-pill" style="background:rgba(127,29,29,0.82);">
+                <i class="ti ti-x" style="font-size:12px;" aria-hidden="true"></i> East end zone — avoid (sun in face)
+              </div>
+            </div>
+          </div>
+
+          <div style="padding:14px 16px 0;">
+            <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-bottom:12px;">
+              <div style="background:#1A1A24;border:0.5px solid #2a2a35;border-radius:12px;padding:12px;">
+                <div style="font-size:10px;color:#444;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px;">Sun azimuth</div>
+                <div style="font-size:20px;font-weight:500;color:#F59E0B;">142°</div>
+              </div>
+              <div style="background:#1A1A24;border:0.5px solid #2a2a35;border-radius:12px;padding:12px;">
+                <div style="font-size:10px;color:#444;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px;">Sun altitude</div>
+                <div style="font-size:20px;font-weight:500;color:#F59E0B;">38°</div>
+              </div>
+              <div style="background:#1A1A24;border:0.5px solid #2a2a35;border-radius:12px;padding:12px;">
+                <div style="font-size:10px;color:#444;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px;">You're facing</div>
+                <div style="font-size:20px;font-weight:500;color:#fff;">315°</div>
+              </div>
+              <div style="background:#1C2A14;border:0.5px solid #4A7C2F;border-radius:12px;padding:12px;">
+                <div style="font-size:10px;color:#5A8A3A;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px;">Glare rating</div>
+                <div style="font-size:15px;font-weight:500;color:#A3D96A;">Minimal</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="screen-settings" class="screen">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:18px;">
+            <button onclick="showScreen('home')" style="background:#1A1A24;border:0.5px solid #2a2a35;border-radius:10px;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#888;font-size:15px;"><i class="ti ti-arrow-left" aria-hidden="true"></i></button>
+            <div style="font-size:16px;font-weight:500;color:#fff;">Settings</div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <div style="background:#1A1A24;border:0.5px solid #2a2a35;border-radius:12px;padding:14px;display:flex;align-items:center;justify-content:space-between;">
+              <div><div style="font-size:13px;font-weight:500;color:#ccc;">Location access</div><div style="font-size:11px;color:#555;margin-top:2px;">Used for sun calculations</div></div>
+              <div style="width:38px;height:22px;background:#4A7C2F;border-radius:11px;position:relative;"><div style="position:absolute;right:3px;top:3px;width:16px;height:16px;background:#fff;border-radius:50%;"></div></div>
+            </div>
+            <div style="background:#1A1A24;border:0.5px solid #2a2a35;border-radius:12px;padding:14px;display:flex;align-items:center;justify-content:space-between;">
+              <div><div style="font-size:13px;font-weight:500;color:#ccc;">Compass</div><div style="font-size:11px;color:#555;margin-top:2px;">For AR field detection</div></div>
+              <div style="width:38px;height:22px;background:#4A7C2F;border-radius:11px;position:relative;"><div style="position:absolute;right:3px;top:3px;width:16px;height:16px;background:#fff;border-radius:50%;"></div></div>
+            </div>
+            <div style="background:#1A1A24;border:0.5px solid #2a2a35;border-radius:12px;padding:14px;display:flex;align-items:center;justify-content:space-between;">
+              <div><div style="font-size:13px;font-weight:500;color:#ccc;">Game reminders</div><div style="font-size:11px;color:#555;margin-top:2px;">Notify 30 min before kickoff</div></div>
+              <div style="width:38px;height:22px;background:#2a2a35;border-radius:11px;position:relative;"><div style="position:absolute;left:3px;top:3px;width:16px;height:16px;background:#888;border-radius:50%;"></div></div>
+            </div>
+          </div>
+          <div style="margin-top:16px;font-size:11px;color:#333;text-align:center;">SunSpot v1.0 — built by Kabir</div>
+        </div>
+      </div>
+
+      <div class="bottom-nav" id="bottom-nav">
+        <div class="nav-item active" onclick="showScreen('home');setNav(this)">
+          <i class="ti ti-home" aria-hidden="true"></i>
+          <span>Home</span>
+        </div>
+        <div class="nav-item" onclick="showScreen('ar');setNav(this)">
+          <i class="ti ti-camera" aria-hidden="true"></i>
+          <span>Live AR</span>
+        </div>
+        <div class="nav-item" onclick="showScreen('result');setNav(this)">
+          <i class="ti ti-map-pin" aria-hidden="true"></i>
+          <span>Results</span>
+        </div>
+        <div class="nav-item" onclick="showScreen('settings');setNav(this)">
+          <i class="ti ti-settings" aria-hidden="true"></i>
+          <span>Settings</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const today = new Date();
+document.getElementById('p-date').value = today.toISOString().split('T')[0];
+
+function showScreen(name) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  const s = document.getElementById('screen-'+name);
+  if (s) s.classList.add('active');
+  if (name === 'result') drawResultField();
+  if (name === 'ar') drawARPreview();
+}
+
+function setNav(el) {
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  el.classList.add('active');
+}
+
+function toggleMode(btn, mode) {
+  document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('plan-view').style.display = mode==='plan'?'block':'none';
+  document.getElementById('ar-view').style.display = mode==='ar'?'block':'none';
+}
+
+function pickSport(el) {
+  el.closest('.sport-row').querySelectorAll('.sport-chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+}
+
+function fakeCompass() {
+  const card = document.getElementById('compass-card');
+  const title = document.getElementById('compass-title');
+  const sub = document.getElementById('compass-sub');
+  title.textContent = 'Detecting...';
+  setTimeout(() => {
+    card.classList.add('detected');
+    title.textContent = 'Field direction detected';
+    sub.textContent = '90° East — tap to re-detect';
+  }, 900);
+}
+
+function drawResultField() {
+  const canvas = document.getElementById('result-canvas');
+  if (!canvas) return;
+  const W = canvas.width = canvas.offsetWidth || 308;
+  const H = canvas.height = 160;
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0,0,W,H);
+  ctx.fillStyle = '#1A1A24'; ctx.beginPath();
+  roundRectPath(ctx,0,0,W,H,14); ctx.fill();
+
+  const fW=W*0.72, fH=H*0.52, fx=(W-fW)/2, fy=(H-fH)/2;
+  ctx.fillStyle='#1e2e18'; ctx.strokeStyle='#3a6a25'; ctx.lineWidth=1;
+  ctx.beginPath(); roundRectPath(ctx,fx,fy,fW,fH,6); ctx.fill(); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(W/2,fy); ctx.lineTo(W/2,fy+fH); ctx.stroke();
+  ctx.beginPath(); ctx.arc(W/2,H/2,fH*0.2,0,Math.PI*2); ctx.stroke();
+
+  const zones = [
+    {x:W/2, y:fy-20, color:'#4A7C2F', score:100},
+    {x:W/2, y:fy+fH+20, color:'#5A1F1F', score:20},
+    {x:fx-20, y:H/2, color:'#92400E', score:60},
+    {x:fx+fW+20, y:H/2, color:'#7F1D1D', score:15},
+  ];
+  zones.forEach(z => {
+    ctx.fillStyle=z.color; ctx.globalAlpha=0.9;
+    ctx.beginPath(); ctx.arc(z.x,z.y,12,0,Math.PI*2); ctx.fill();
+    ctx.globalAlpha=1; ctx.fillStyle='#fff'; ctx.font='500 10px sans-serif';
+    ctx.textAlign='center'; ctx.textBaseline='middle';
+    ctx.fillText(z.score>=80?'★':z.score>=50?'~':'✕', z.x, z.y);
+  });
+
+  const sunR=10;
+  const sunX=Math.min(W-20, Math.max(20, W*0.72));
+  const sunY=Math.min(H-20, Math.max(20, H*0.25));
+  ctx.fillStyle='#F59E0B'; ctx.globalAlpha=0.92;
+  ctx.beginPath(); ctx.arc(sunX,sunY,sunR,0,Math.PI*2); ctx.fill();
+  ctx.globalAlpha=1; ctx.font='9px sans-serif'; ctx.textAlign='center'; ctx.textBaseline='middle';
+  ctx.fillText('☀',sunX,sunY);
+
+  ctx.fillStyle='#444'; ctx.font='9px sans-serif'; ctx.textAlign='center';
+  ctx.fillText('★ best  ~ ok  ✕ avoid   ☀ sun', W/2, H-7);
+}
+
+function drawARPreview() {
+  const canvas = document.getElementById('ar-canvas');
+  if (!canvas) return;
+  const W = canvas.width = canvas.offsetWidth || 340;
+  const H = canvas.height = canvas.offsetHeight || 300;
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0,0,W,H);
+  ctx.fillStyle='#0a0a12';
+  ctx.fillRect(0,0,W,H);
+
+  const fW=W*0.65, fH=H*0.38, fx=(W-fW)/2, fy=H*0.28;
+  ctx.strokeStyle='rgba(74,124,47,0.6)'; ctx.lineWidth=1.5;
+  ctx.strokeRect(fx,fy,fW,fH);
+  ctx.beginPath(); ctx.moveTo(W/2,fy); ctx.lineTo(W/2,fy+fH); ctx.stroke();
+
+  ctx.strokeStyle='rgba(255,255,255,0.08)'; ctx.lineWidth=0.5;
+  for(let i=1;i<4;i++){ctx.beginPath();ctx.moveTo(0,H*i/4);ctx.lineTo(W,H*i/4);ctx.stroke();}
+  for(let i=1;i<4;i++){ctx.beginPath();ctx.moveTo(W*i/4,0);ctx.lineTo(W*i/4,H);ctx.stroke();}
+
+  const roseCanvas = document.getElementById('rose-canvas');
+  if (roseCanvas) {
+    const rc = roseCanvas.getContext('2d');
+    rc.clearRect(0,0,52,52);
+    rc.strokeStyle='rgba(255,255,255,0.25)'; rc.lineWidth=0.5;
+    rc.beginPath(); rc.arc(26,26,22,0,Math.PI*2); rc.stroke();
+    ['N','E','S','W'].forEach((d,i)=>{
+      const a=(i*90-90)*Math.PI/180;
+      rc.fillStyle='rgba(255,255,255,0.5)'; rc.font='8px sans-serif';
+      rc.textAlign='center'; rc.textBaseline='middle';
+      rc.fillText(d,26+Math.cos(a)*14,26+Math.sin(a)*14);
+    });
+    rc.fillStyle='#F59E0B'; rc.font='12px sans-serif';
+    rc.textAlign='center'; rc.textBaseline='middle';
+    const sunA=(142-90)*Math.PI/180;
+    rc.fillText('☀',26+Math.cos(sunA)*14,26+Math.sin(sunA)*14);
+    rc.fillStyle='rgba(255,255,255,0.8)'; rc.font='11px sans-serif';
+    const facA=(315-90)*Math.PI/180;
+    rc.fillText('▲',26+Math.cos(facA)*14,26+Math.sin(facA)*14);
+  }
+}
+
+function roundRectPath(ctx,x,y,w,h,r) {
+  ctx.beginPath();
+  ctx.moveTo(x+r,y); ctx.lineTo(x+w-r,y);
+  ctx.quadraticCurveTo(x+w,y,x+w,y+r);
+  ctx.lineTo(x+w,y+h-r);
+  ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);
+  ctx.lineTo(x+r,y+h);
+  ctx.quadraticCurveTo(x,y+h,x,y+h-r);
+  ctx.lineTo(x,y+r);
+  ctx.quadraticCurveTo(x,y,x+r,y);
+  ctx.closePath();
+}
+
+setTimeout(()=>{ drawResultField(); drawARPreview(); }, 100);
+</script>
